@@ -51,6 +51,7 @@ export async function rpchandler(this: WasimoffProvider, request: ProtoMessage):
           rootfs: await getRootfsZip(this, task.rootfs),
           artifacts: task.artifacts,
         } as Wasip1TaskParams);
+        console.log("Job completed")
         n_busy = this.pool.busy.filter(busy => busy).length;
         if (n_busy == 0) {
           console.log("Returning to idle");
