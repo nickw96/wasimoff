@@ -38,11 +38,7 @@ export async function rpchandler(this: WasimoffProvider, request: ProtoMessage):
       console.debug(...rpcHandlerPrefix, info.id, task);
       try {
         // execute the module in a worker
-        let n_busy: number;
-        n_busy = this.pool.busy.filter(busy => busy).length;
-        if (n_busy == 0) {
-          console.log("Start running tasks")
-        }
+        console.log(`Start running task ${info.id}`)
         let run = await this.pool.runWasip1(info.id, {
           wasm: wasm,
           argv: task.args,
@@ -51,11 +47,7 @@ export async function rpchandler(this: WasimoffProvider, request: ProtoMessage):
           rootfs: await getRootfsZip(this, task.rootfs),
           artifacts: task.artifacts,
         } as Wasip1TaskParams);
-        console.log("Job completed")
-        n_busy = this.pool.busy.filter(busy => busy).length;
-        if (n_busy == 0) {
-          console.log("Returning to idle");
-        }
+        console.log(`Task ${info.id} completed`)
         // send back the result
         return create(wasimoff.Task_Wasip1_ResponseSchema, {
           result: { case: "ok", value: {
